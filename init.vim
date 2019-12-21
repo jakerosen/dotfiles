@@ -199,6 +199,10 @@ nnoremap <silent> <Tab> :w<Enter>
 ino <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 ino <expr> <CR> pumvisible() ? "\<C-y>" : "\<CR>"
 
+" Jump forward
+nn <C-f> <C-i>
+" <C-o> is jump back (default binding)
+
 " Make visual mode * work like normal mode *
 vnoremap * y/<C-R>"<Enter>
 
