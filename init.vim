@@ -31,6 +31,9 @@ Plug 'terryma/vim-multiple-cursors'
 " Swap the location of two selections. Occasionally useful.
 Plug 'tommcdo/vim-exchange'
 
+" Ghcide
+Plug 'neoclide/coc.nvim', { 'branch': 'release' }
+
 call plug#end()
 
 " ------------------------------------------------------------------------------
@@ -38,7 +41,7 @@ call plug#end()
 " ------------------------------------------------------------------------------
 " These are set by vim-plug
 " syntax on
-" filetype plugin indent on
+" filetype plugin indent off
 
 
 " Colors
@@ -47,7 +50,7 @@ if filereadable(expand("~/.vimrc_background"))
   let base16colorspace=256
   source ~/.vimrc_background
 endif
-colorscheme badwolf
+" colorscheme badwolf
 " colorscheme monokai
 " set background=dark " use dark theme (does not work with monokai)
 
@@ -187,13 +190,22 @@ nnoremap <C-l> <C-w>l
 nn <expr> <silent> <Space>d len(getbufinfo({'buflisted': 1})) ==? 1 ? ":q\<CR>" : ":bw\<CR>"
 
 " Unhighlight search with enter
-nnoremap <silent> <Enter> :nohlsearch<Enter>
+nnoremap <silent> ? :nohlsearch<Enter>
 
 " Save with tab
 nnoremap <silent> <Tab> :w<Enter>
 
+" tab complete suggestions
+ino <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+ino <expr> <CR> pumvisible() ? "\<C-y>" : "\<CR>"
+
 " Make visual mode * work like normal mode *
 vnoremap * y/<C-R>"<Enter>
+
+" repld mitchell
+nn <silent> <Space>s m`vip<Esc>:silent '<,'>w !repld-send<CR>``
+nn <silent> <Space>S m`:silent w !repld-send<CR>``
+vn <silent> <Space>s m`<Esc>:silent '<,'>w !repld-send<CR>``
 
 " [commentary]
 " Comment line(s)
@@ -324,6 +336,15 @@ endfun
 "  endif
 " endfunction
 
+" [coc-nvim]
+function! s:HandleEnter()
+ if coc#util#has_float()
+   call coc#util#float_hide()
+ else
+   call CocAction('doHover')
+ endif
+endfunction
+
 " ------------------------------------------------------------------------------
 " Autocommands
 " ------------------------------------------------------------------------------
@@ -408,6 +429,27 @@ let g:exchange_no_mappings = 1
 " [elm]
 let g:elm_setup_keybindings = 0 " Don't make any key mappings
 let g:elm_format_autosave = 0 " Don't run elm-format on save
+
+" [ghcide coc]
+nm <silent> gd <Plug>(coc-definition)
+nn <silent> <Enter> :call <SID>HandleEnter()<CR>
+
+" Optional hotkeys -- add as wanted
+" <Left>/<Right> to jump around warnings/errors (annoying that it's only
+" buffer-local)
+" nm <silent> <Left> <Plug>(coc-diagnostic-prev)
+" nm <silent> <Right> <Plug>(coc-diagnostic-next)
+" " gd to go to definition of thing under cursor
+" " Also <Del> (trying it out since it's one key)
+" nm <silent> gd <Plug>(coc-definition)
+" nm <silent> <Del> <Plug>(coc-definition)
+" " <Enter> to show type of thing under cursor
+" nn <silent> <Enter> :call <SID>HandleEnter()<CR>
+" " <Space>i to open quickfix
+" nn <silent> <Space>i :CocFix<CR>
+" " Backspace to open all warnings/errors in a list
+" nn <silent> <BS> :CocList diagnostics<CR>
+
 
 " ------------------------------------------------------------------------------
 " Abbreviations
