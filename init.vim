@@ -206,6 +206,10 @@ nn <C-f> <C-i>
 " Make visual mode * work like normal mode *
 vnoremap * y/<C-R>"<Enter>
 
+" Space-p to format Haskell code
+au FileType haskell nn <buffer> <silent> <Space>p m`!ipormolu<CR>``
+au FileType haskell vn <buffer> <silent> <Space>p m`!ormolu<CR>``
+
 " repld mitchell
 nn <silent> <Space>s m`vip<Esc>:silent '<,'>w !repld-send<CR>``
 nn <silent> <Space>S m`:silent w !repld-send<CR>``
@@ -370,6 +374,9 @@ au FileType fzf,ghcid nn <silent> <buffer> <Esc> :q<CR>
 " au FileType haskell ino : ;
 au FileType haskell nn r; r:
 au FileType haskell nn r: r;
+
+" Unison commentary
+au FileType unison setlocal commentstring=--\ %s
 
 " ------------------------------------------------------------------------------
 " Plugins
